@@ -1,32 +1,41 @@
-import Link from "next/link";
+import { Card } from '@/app/ui/dashboard/cards';
+import RevenueChart from '@/app/ui/dashboard/revenue-chart';
+import LatestInvoices from '@/app/ui/dashboard/latest-invoices';
+import { lusitana } from '@/app/ui/fonts';
+import { fetchCardData, fetchLatestInvoices, fetchRevenue } from '@/app/lib/data';
 
-export default function Page() {
+export default async function Page() {
+  // Fetch the revenue data from the server
+  const revenue = await fetchRevenue();
+  // Fetch the latest invoices from the server
+  const latestInvoices = await fetchLatestInvoices();
+  // Fetch the card data from the server
+  const {
+    numberOfCustomers,
+    numberOfInvoices,
+    totalPaidInvoices,
+    totalPendingInvoices,
+  } = await fetchCardData();
+
   return (
-    <div className="flex min-h-screen flex-col p-6">
-      <h1 className="text-2xl font-bold">
-        Dashboard Page
+    <main>
+      <h1 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
+        Dashboard
       </h1>
-      {/* customers page */}
-      <div className="mt-4">
-        <h2 className="text-xl font-semibold">Customers</h2>
-        <p className="text-gray-600">Manage your customers here.</p>
-        <Link href="/dashboard/customers">
-          <button className="mt-2 rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-400">
-            View Customers
-          </button>
-        </Link>
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <Card title="Collected" value={totalPaidInvoices} type="collected" />
+        <Card title="Pending" value={totalPendingInvoices} type="pending" />
+        <Card title="Total Invoices" value={numberOfInvoices} type="invoices" />
+        <Card
+          title="Total Customers"
+          value={numberOfCustomers}
+          type="customers"
+        />
       </div>
-
-      {/* invoices page */}
-      <div className="mt-4">
-        <h2 className="text-xl font-semibold">Invoices</h2>
-        <p className="text-gray-600">Manage your invoices here.</p>
-        <Link href="/dashboard/invoices">
-          <button className="mt-2 rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-400">
-            View Invoices
-          </button>
-        </Link>
+      <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8">
+        <RevenueChart revenue={revenue}  />
+        <LatestInvoices latestInvoices={latestInvoices} />
       </div>
-    </div>
-  )
+    </main>
+  );
 }
