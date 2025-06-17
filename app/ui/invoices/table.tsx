@@ -3,6 +3,7 @@ import { UpdateInvoice, DeleteInvoice } from '@/app/ui/invoices/buttons';
 import InvoiceStatus from '@/app/ui/invoices/status';
 import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
 import { fetchFilteredInvoices } from '@/app/lib/data';
+import { ITEMS_PER_PAGE } from '@/app/dashboard/invoices/config';
 
 export default async function InvoicesTable({
   query,
@@ -11,13 +12,22 @@ export default async function InvoicesTable({
   query: string;
   currentPage: number;
 }) {
-  const invoices = await fetchFilteredInvoices(query, currentPage);
+  const invoices = await fetchFilteredInvoices({
+    query,
+    currentPage,
+    perPage: ITEMS_PER_PAGE
+  });
 
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
           <div className="md:hidden">
+            {!invoices?.length && (
+              <p className="text-center text-gray-500">
+                No invoices found for the search term "{query}".
+              </p>
+            )}
             {invoices?.map((invoice) => (
               <div
                 key={invoice.id}
@@ -78,6 +88,16 @@ export default async function InvoicesTable({
               </tr>
             </thead>
             <tbody className="bg-white">
+              {!invoices?.length && (
+                <tr>
+                  <td
+                    colSpan={6}
+                    className="text-center text-gray-500 py-5"
+                  >
+                    No invoices found for the search term "{query}".
+                  </td>
+                </tr>
+              )}
               {invoices?.map((invoice) => (
                 <tr
                   key={invoice.id}
