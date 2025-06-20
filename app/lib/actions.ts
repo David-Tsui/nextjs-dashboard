@@ -32,7 +32,6 @@ export async function createInvoice(formData: FormData) {
     INSERT INTO invoices (customer_id, amount, status, date)
     VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
   `
-  await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate delay
 
   revalidatePath('/dashboard/invoices');
   redirect('/dashboard/invoices');
@@ -51,9 +50,17 @@ export async function updateInvoice(id: string, formData: FormData) {
     SET customer_id = ${customerId}, amount = ${amountInCents}, status = ${status}
     WHERE id = ${id}
   `;
-  await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate delay
 
-  // revalidatePath(`/dashboard/invoices/${id}/edit`);
+  revalidatePath('/dashboard/invoices');
+  redirect('/dashboard/invoices');
+}
+
+export async function deleteInvoice(id: string) {
+  await sql`
+    DELETE FROM invoices
+    WHERE id = ${id}
+  `;
+
   revalidatePath('/dashboard/invoices');
   redirect('/dashboard/invoices');
 }
