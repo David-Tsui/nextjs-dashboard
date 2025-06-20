@@ -7,7 +7,7 @@ import {
   UserCircleIcon,
 } from '@heroicons/react/24/outline';
 import { createInvoice } from '@/app/lib/actions';
-import SubmitButton from '../submitButton';
+import SubmitButton from '../submit-button';
 
 export default function Form({ customers }: { customers: CustomerField[] }) {
   if (!customers || customers.length === 0) {
