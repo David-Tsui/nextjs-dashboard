@@ -25,6 +25,8 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
     );
   }
 
+  const fieldErrorStyles = 'mt-2 text-sm text-red-500';
+
   const renderCustomerSelection = () => (
     <>
       <div className="relative">
@@ -50,7 +52,7 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
         {
           state.errors?.customerId &&
           state.errors.customerId.map((error: string) => (
-            <p className="mt-2 text-sm text-red-500" key={error}>
+            <p className={fieldErrorStyles} key={error}>
               {error}
             </p>
           ))
@@ -80,7 +82,7 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
         {
           state.errors?.amount &&
           state.errors.amount.map((error: string) => (
-            <p className="mt-2 text-sm text-red-500" key={error}>
+            <p className={fieldErrorStyles} key={error}>
               {error}
             </p>
           ))
@@ -133,7 +135,7 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
         {
           state.errors?.status &&
           state.errors.status.map((error: string) => (
-            <p className="mt-2 text-sm text-red-500" key={error}>
+            <p className={fieldErrorStyles} key={error}>
               {error}
             </p>
           ))
