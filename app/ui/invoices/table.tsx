@@ -25,7 +25,7 @@ export default async function InvoicesTable({
           <div className="md:hidden">
             {!invoices?.length && (
               <p className="text-center text-gray-500">
-                No invoices found for the search term "{query}".
+                No invoices found for the search term &quot;{query}&quot;.
               </p>
             )}
             {invoices?.map((invoice) => (
@@ -94,7 +94,7 @@ export default async function InvoicesTable({
                     colSpan={6}
                     className="text-center text-gray-500 py-5"
                   >
-                    No invoices found for the search term "{query}".
+                    No invoices found for the search term &quot;{query}&quot;.
                   </td>
                 </tr>
               )}
