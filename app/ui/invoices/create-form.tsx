@@ -9,18 +9,17 @@ import { useActionState, useEffect, useState } from 'react';
 import CustomerSelection from './form/selection-customer';
 import AmountInput from './form/input-amount';
 import StatusRadioButtons from './form/radio-button-status';
+import ValidationModeSwitch from './form/switch-validation-mode';
+import ControlPanel from './panel-control';
 
 type CreateInvoiceFormProps = {
   customers: CustomerField[];
 };
 
-export default function CreateInvoiceForm({
-  customers,
-}: CreateInvoiceFormProps) {
+export default function CreateInvoiceForm({ customers }: CreateInvoiceFormProps) {
   const initialState: State = { message: null, errors: {} };
   const [state, formAction] = useActionState(createInvoice, initialState);
-
-  // 新增本地 errors 狀態
+  const [validatedByServer, setValidatedByServer] = useState(false);
   const [localErrors, setLocalErrors] = useState<State['errors']>({});
 
   // 當 actionState 有錯誤時同步到本地 errors
@@ -43,6 +42,22 @@ export default function CreateInvoiceForm({
 
   return (
     <form action={formAction}>
+      <ControlPanel
+        title="Form Control Panel"
+        description="Configure validation and other settings for this form"
+        settings={[
+          {
+            label: 'Form Validation Mode',
+            render: (
+              <ValidationModeSwitch
+                value={validatedByServer}
+                onChange={setValidatedByServer}
+              />
+            ),
+          },
+        ]}
+      />
+
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/* Customer Name */}
         <div className="mb-4">
@@ -51,7 +66,7 @@ export default function CreateInvoiceForm({
           </label>
           <CustomerSelection
             customers={customers}
-            required
+            required={!validatedByServer}
             errors={localErrors?.customerId}
             onChange={() => clearError('customerId')}
           />
@@ -64,7 +79,7 @@ export default function CreateInvoiceForm({
           </label>
           <div className="relative mt-2 rounded-md">
             <AmountInput
-              required
+              required={!validatedByServer}
               errors={localErrors?.amount}
               onChange={() => clearError('amount')}
             />
@@ -77,7 +92,7 @@ export default function CreateInvoiceForm({
             Set the invoice status
           </legend>
           <StatusRadioButtons
-            required
+            required={!validatedByServer}
             defaultValue="pending"
             errors={localErrors?.status}
             onChange={() => clearError('status')}

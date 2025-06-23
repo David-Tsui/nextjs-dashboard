@@ -9,6 +9,8 @@ import { State, updateInvoice } from '@/app/lib/actions';
 import CustomerSelection from './form/selection-customer';
 import AmountInput from './form/input-amount';
 import StatusRadioButtons from './form/radio-button-status';
+import ControlPanel from './panel-control';
+import ValidationModeSwitch from './form/switch-validation-mode';
 
 type EditInvoiceFormProps = {
   invoice: InvoiceForm;
@@ -33,6 +35,7 @@ export default function EditInvoiceForm({
     updateInvoiceWithId,
     initialState
   );
+  const [validatedByServer, setValidatedByServer] = useState(false);
   const [localErrors, setLocalErrors] = useState<State['errors']>({});
 
   // 同步 actionState 的 errors 到本地
@@ -63,6 +66,22 @@ export default function EditInvoiceForm({
       ref={formRef}
       onChange={handleFormChange}
     >
+      <ControlPanel
+        title="Form Control Panel"
+        description="Configure validation and other settings for this form"
+        settings={[
+          {
+            label: 'Form Validation Mode',
+            render: (
+              <ValidationModeSwitch
+                value={validatedByServer}
+                onChange={setValidatedByServer}
+              />
+            ),
+          },
+        ]}
+      />
+
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/* Customer Name */}
         <div className="mb-4">
@@ -72,7 +91,7 @@ export default function EditInvoiceForm({
           <CustomerSelection
             customers={customers}
             defaultValue={invoice.customer_id}
-            required
+            required={!validatedByServer}
             errors={localErrors?.customerId}
             onChange={() => clearError('customerId')}
           />
@@ -86,7 +105,7 @@ export default function EditInvoiceForm({
           <div className="relative mt-2 rounded-md">
             <AmountInput
               defaultValue={invoice.amount}
-              required
+              required={!validatedByServer}
               errors={localErrors?.amount}
               onChange={() => clearError('amount')}
             />
@@ -100,7 +119,7 @@ export default function EditInvoiceForm({
           </legend>
           <StatusRadioButtons
             defaultValue={invoice.status}
-            required
+            required={!validatedByServer}
             errors={localErrors?.status}
             onChange={() => clearError('status')}
           />
