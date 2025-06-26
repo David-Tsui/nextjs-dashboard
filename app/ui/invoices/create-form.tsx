@@ -18,7 +18,7 @@ type CreateInvoiceFormProps = {
 
 export default function CreateInvoiceForm({ customers }: CreateInvoiceFormProps) {
   const initialState: State = { message: null, errors: {} };
-  const [state, formAction] = useActionState(createInvoice, initialState);
+  const [state, formAction, pending] = useActionState(createInvoice, initialState);
   const [validatedByServer, setValidatedByServer] = useState(false);
   const [localErrors, setLocalErrors] = useState<State['errors']>({});
 
@@ -115,7 +115,7 @@ export default function CreateInvoiceForm({ customers }: CreateInvoiceFormProps)
         >
           Cancel
         </Link>
-        <SubmitButton pendingText="Creating...">
+        <SubmitButton pending={pending}>
           Create Invoice
         </SubmitButton>
       </div>

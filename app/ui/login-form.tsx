@@ -15,7 +15,7 @@ import SubmitButton from './submit-button';
 export default function LoginForm() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
-  const [errorMessage, formAction] = useActionState(
+  const [errorMessage, formAction, pending] = useActionState(
     authenticate,
     undefined,
   );
@@ -69,8 +69,9 @@ export default function LoginForm() {
         </div>
         <input type="hidden" name="redirectTo" value={callbackUrl} />
         <SubmitButton
+          pending={pending}
           className="mt-4 w-full"
-          pendingText="Logging in...">
+        >
           Log in <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
         </SubmitButton>
         <div

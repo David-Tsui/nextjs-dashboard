@@ -1,10 +1,11 @@
 'use client';
 
-import { useFormStatus } from "react-dom";
 import { Button } from "./button";
+import LoadingSpinner from "./loading-spinner";
 
 interface SubmitButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
+  pending?: boolean;
   pendingText?: string;
   disabled?: boolean;
 }
@@ -12,11 +13,11 @@ interface SubmitButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement
 export default function SubmitButton({
   children,
   className,
+  pending,
   pendingText,
   disabled,
   ...rest
 }: SubmitButtonProps) {
-  const { pending } = useFormStatus();
   const isDisabled = pending || disabled;
 
   return (
@@ -25,9 +26,17 @@ export default function SubmitButton({
       type="submit"
       aria-disabled={isDisabled}
       disabled={isDisabled}
-      className={className}
+      className={`relative ${className ?? ''}`}
     >
-      {pending ? pendingText || "Submitting..." : children}
+      {pending && pendingText && pendingText}
+      {pending && !pendingText && (
+        <span className="absolute inset-0 flex items-center justify-center z-10 bg-white/60 rounded-lg">
+          <LoadingSpinner />
+        </span>
+      )}
+      <span className={pending && !pendingText ? "opacity-50" : ""}>
+        {children}
+      </span>
     </Button>
   );
 }

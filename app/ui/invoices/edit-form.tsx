@@ -31,7 +31,7 @@ export default function EditInvoiceForm({
 
   const initialState: State = { message: null, errors: {} };
   const updateInvoiceWithId = updateInvoice.bind(null, invoice.id);
-  const [state, formAction] = useActionState(
+  const [state, formAction, pending] = useActionState(
     updateInvoiceWithId,
     initialState
   );
@@ -143,7 +143,7 @@ export default function EditInvoiceForm({
         </Link>
         <SubmitButton
           disabled={!dirty}
-          pendingText="Saving..."
+          pending={pending}
         >
           Save Changes
         </SubmitButton>
