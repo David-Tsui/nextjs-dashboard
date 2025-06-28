@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from "clsx";
 import { Button } from "./button";
 import LoadingSpinner from "./loading-spinner";
 
@@ -34,7 +35,10 @@ export default function SubmitButton({
           <LoadingSpinner />
         </span>
       )}
-      <span className={pending && !pendingText ? "opacity-50" : ""}>
+      <span className={clsx(
+        pending && !pendingText ? "opacity-50" : "",
+        'contents'
+      )}>
         {children}
       </span>
     </Button>
