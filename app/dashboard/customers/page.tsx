@@ -1,3 +1,10 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Customers',
+  description: 'Manage your customers and view their details.',
+};
+
 export default function Page() {
   const renderTableColumns = () => (
     <tr>
