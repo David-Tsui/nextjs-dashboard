@@ -7,10 +7,12 @@ import {
   ExclamationCircleIcon,
 } from '@heroicons/react/24/outline';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
-import { useActionState } from 'react';
+import { startTransition, useActionState } from 'react';
 import { authenticate } from '@/app/lib/actions';
 import { useSearchParams } from 'next/navigation';
 import SubmitButton from './submit-button';
+import { validateCaptchaAction } from '@/app/lib/validate-recaptcha';
+import { getCaptchaToken } from '@/app/lib/get-captcha-token';
 
 export default function LoginForm() {
   const searchParams = useSearchParams();
@@ -20,8 +22,26 @@ export default function LoginForm() {
     undefined,
   );
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const form = e.target as HTMLFormElement;
+    const token = await getCaptchaToken()
+    const formData = new FormData(form);
+    const response = await validateCaptchaAction(token, formData);
+
+    if (response.success) {
+      startTransition(() => {
+        formAction(formData);
+      });
+    }
+  }
+
   return (
-    <form action={formAction} className="space-y-3">
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-3"
+    >
       <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8">
         <h1 className={`${lusitana.className} mb-3 text-2xl`}>
           Please log in to continue.
@@ -70,7 +90,7 @@ export default function LoginForm() {
         <input type="hidden" name="redirectTo" value={callbackUrl} />
         <SubmitButton
           pending={pending}
-          className="mt-4 w-full"
+          className="g-recaptcha mt-4 w-full"
         >
           Log in <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
         </SubmitButton>

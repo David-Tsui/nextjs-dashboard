@@ -2,7 +2,7 @@
 
 import { ProgressProvider } from '@bprogress/next/app';
 
-const Providers = ({ children }: { children: React.ReactNode }) => {
+export const AppProgressProviders = ({ children }: { children: React.ReactNode }) => {
   return (
     <ProgressProvider
       height="4px"
@@ -14,5 +14,3 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
     </ProgressProvider>
   );
 };
-
-export default Providers;
